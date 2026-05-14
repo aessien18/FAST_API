@@ -36,7 +36,17 @@ if os.path.exists(application_file):
         applications = json.load(f)
 
 
-@app.get("/application")
+@app.get("/")
+async def home():
+    return {"message": "API is running"}
+
+
+@app.get("/get-application")
+async def get_all_application():
+    return applications
+
+
+@app.get("/application/{id}")
 async def get_application(id: int):
     for application in applications:
         if application["id"] == id:
