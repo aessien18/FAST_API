@@ -69,3 +69,35 @@ async def add_application(application: Applications):
 
     return {"message": "Application added successfully",
             "data": json_application}
+
+
+@app.put("/update-application/{id}")
+async def update_application(id: int, application: Applications):
+    json_application = jsonable_encoder(application)
+    for app in applications:
+        if app["id"] == id:
+            app.update(json_application)
+            with open(application_file, "w") as f:
+                json.dump(applications, f)
+            return {
+                "message": "updated successfully",
+                "data": app
+            }
+
+    raise HTTPException(status_code=404, detail="Application not found")
+
+
+@app.delete("/delete-application/{id}")
+async def delete_application(id: int, application: Applications):
+    json_application = jsonable_encoder(application)
+    for app in applications:
+        if app["id"] == id:
+            applications.remove(app)
+            with open(application_file, "w") as f:
+                json.dump(applications, f)
+            return {
+                "message": "deleted successfully",
+                "data": app
+            }
+
+    raise HTTPException(status_code=404, detail="Application not found")
